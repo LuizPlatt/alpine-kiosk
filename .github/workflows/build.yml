@@ -1,0 +1,29 @@
+name: Build Alpine Kiosk Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y squashfs-tools wget
+
+      - name: Build image
+        run: |
+          chmod +x build_image.sh
+          ./build_image.sh
+
+      - name: Upload files
+        uses: actions/upload-artifact@v3
+        with:
+          name: kiosk-image
+          path: ./output/*
